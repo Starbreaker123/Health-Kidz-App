@@ -1,0 +1,83 @@
+# HealthKidz - Children's Nutrition Tracker
+# Primary: https://healthkidz.vercel.app
+# Secondary: https://nutri-kid.vercel.app
+
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Disallow development and build assets
+Disallow: /__vite/
+Disallow: /node_modules/
+Disallow: /src/
+Disallow: /android/
+Disallow: /ios/
+Disallow: /dist/
+Disallow: /*.json$
+Disallow: /*.ts$
+Disallow: /*.tsx$
+Disallow: /*.js$
+Disallow: /*.css$
+Disallow: /*.scss$
+Disallow: /*.sass$
+Disallow: /*.less$
+
+# Allow important static assets
+Allow: /manifest.webmanifest
+Allow: /robots.txt
+Allow: /sitemap.xml
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.gif
+Allow: /*.webp
+Allow: /*.svg
+Allow: /*.ico
+
+# Specific instructions for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 2
+
+# Social media crawlers
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+# Sitemap location
+Sitemap: https://healthkidz.vercel.app/sitemap.xml
+Sitemap: https://nutri-kid.vercel.app/sitemap.xml
+
+# Host declaration
+Host: https://healthkidz.vercel.app

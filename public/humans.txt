@@ -1,0 +1,15 @@
+# HealthKidz - Children's Nutrition Tracker
+
+/* TEAM */
+Developer: Duong Le Doan
+Contact: duongledoan2110@gmail.com
+From: Viet Nam
+
+/* THANKS */
+Thanks to all the parents who trust us with their children's nutrition journey.
+
+/* SITE */
+Last update: 2025/9/11
+Language: English
+Doctype: HTML5
+IDE: VS Code, Cursor

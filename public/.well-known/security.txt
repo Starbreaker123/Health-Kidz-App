@@ -1,0 +1,6 @@
+Contact: mailto:security@healthkidz.vercel.app
+Expires: 2025-12-31T23:59:59.000Z
+Encryption: https://healthkidz.vercel.app/pgp-key.txt
+Preferred-Languages: en
+Canonical: https://healthkidz.vercel.app/.well-known/security.txt
+Policy: https://healthkidz.vercel.app/security-policy

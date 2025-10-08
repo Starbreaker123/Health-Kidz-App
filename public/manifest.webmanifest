@@ -1,0 +1,155 @@
+{
+  "name": "HealthKidz - Smart Children's Nutrition Tracker & AI Coach",
+  "short_name": "HealthKidz",
+  "description": "The ultimate children's nutrition tracking app. Monitor your child's daily meals, track macronutrients, get AI-powered nutrition coaching, and ensure healthy growth. Perfect for parents who want the best nutrition for their kids.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#10B981",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["health", "lifestyle", "medical", "education", "food"],
+  "screenshots": [
+    {
+      "src": "/icon-512.webp",
+      "type": "image/webp",
+      "sizes": "512x512",
+      "form_factor": "wide",
+      "label": "HealthKidz App Screenshot"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add Meal",
+      "short_name": "Add Meal",
+      "description": "Quickly add a meal for your child",
+      "url": "/meals?action=add",
+      "icons": [
+        {
+          "src": "/icon-96.webp",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "View Progress",
+      "short_name": "Progress",
+      "description": "Check your child's nutrition progress",
+      "url": "/progress",
+      "icons": [
+        {
+          "src": "/icon-96.webp",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "AI Coach",
+      "short_name": "AI Coach",
+      "description": "Get AI-powered nutrition advice",
+      "url": "/ai-coach",
+      "icons": [
+        {
+          "src": "/icon-96.webp",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "icons": [
+    {
+      "src": "/icon-48.webp",
+      "type": "image/webp",
+      "sizes": "48x48",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-72.webp",
+      "type": "image/webp",
+      "sizes": "72x72",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-96.webp",
+      "type": "image/webp",
+      "sizes": "96x96",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-128.webp",
+      "type": "image/webp",
+      "sizes": "128x128",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.webp",
+      "type": "image/webp",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-256.webp",
+      "type": "image/webp",
+      "sizes": "256x256",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.webp",
+      "type": "image/webp",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-48.webp",
+      "type": "image/webp",
+      "sizes": "48x48",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-72.webp",
+      "type": "image/webp",
+      "sizes": "72x72",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-96.webp",
+      "type": "image/webp",
+      "sizes": "96x96",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-128.webp",
+      "type": "image/webp",
+      "sizes": "128x128",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-192.webp",
+      "type": "image/webp",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-256.webp",
+      "type": "image/webp",
+      "sizes": "256x256",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.webp",
+      "type": "image/webp",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
+}

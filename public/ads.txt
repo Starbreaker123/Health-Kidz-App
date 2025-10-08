@@ -1,0 +1,6 @@
+# HealthKidz - Children's Nutrition Tracker
+# This file is used to declare authorized digital sellers for this domain
+# For more information, visit: https://iabtechlab.com/ads-txt/
+
+# Currently no advertising partners
+# Add authorized sellers here when applicable

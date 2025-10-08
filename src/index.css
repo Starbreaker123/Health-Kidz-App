@@ -1,0 +1,491 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Enhanced HealthKidz Design System with Mobile-First Approach */
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 142 76% 36%;
+    --primary-foreground: 355 85% 97%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 48 96% 53%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142 76% 36%;
+
+    --radius: 0.75rem;
+
+    /* Enhanced HealthKidz Colors */
+    --nutri-green: 142 76% 36%;
+    --nutri-green-light: 142 76% 45%;
+    --nutri-orange: 25 95% 53%;
+    --nutri-blue: 217 91% 60%;
+    --nutri-purple: 262 83% 58%;
+    --nutri-yellow: 48 96% 53%;
+    --nutri-pink: 330 81% 60%;
+    
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Mobile-specific variables - Updated for better UX */
+    --mobile-header-height: 3.5rem;
+    --mobile-nav-height: 4rem;
+    --touch-target-size: 44px; /* Apple/Google recommended minimum */
+    --mobile-text-base: 16px; /* Prevents zoom on iOS */
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    /* Enhanced mobile optimization */
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* Ensure minimum text size on mobile */
+    font-size: var(--mobile-text-base);
+  }
+
+  /* Enhanced responsive typography - Fixed for mobile readability */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold leading-tight;
+    line-height: 1.2;
+  }
+
+  /* Mobile-first improvements */
+  html {
+    /* Prevent zoom on input focus on iOS */
+    -webkit-text-size-adjust: 100%;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+  }
+  
+  /* Enhanced touch targets for accessibility - CRITICAL FIX */
+  button, a, [role="button"], input, select, textarea, [tabindex] {
+    min-height: var(--touch-target-size);
+    min-width: var(--touch-target-size);
+  }
+  
+  /* Ensure clickable elements meet minimum size requirements */
+  .touch-target {
+    min-height: var(--touch-target-size);
+    min-width: var(--touch-target-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Better mobile scrolling */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Enhanced focus states for accessibility */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  /* Improved text selection */
+  ::selection {
+    @apply bg-primary/20 text-foreground;
+  }
+}
+
+@layer components {
+  /* Enhanced HealthKidz Component Styles */
+  .nutri-card {
+    @apply bg-white rounded-xl sm:rounded-2xl shadow-sm sm:shadow-lg border-0 overflow-hidden transition-all duration-300 hover:shadow-lg sm:hover:shadow-xl;
+  }
+
+  /* Enhanced gradient variants */
+  .nutri-gradient-green {
+    @apply bg-gradient-to-br from-green-400 via-green-500 to-green-600;
+  }
+
+  .nutri-gradient-orange {
+    @apply bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600;
+  }
+
+  .nutri-gradient-blue {
+    @apply bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600;
+  }
+
+  .nutri-gradient-purple {
+    @apply bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600;
+  }
+
+  /* Enhanced text shadow */
+  .nutri-text-shadow {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  /* Progress ring enhancements */
+  .nutri-progress-ring {
+    @apply relative inline-flex items-center justify-center;
+  }
+
+  /* Enhanced floating effect with mobile optimization */
+  .nutri-floating {
+    @apply transform transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  /* Mobile-optimized component styles - CRITICAL UPDATES */
+  .mobile-touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center p-2 touch-target;
+  }
+
+  .mobile-safe-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  .mobile-responsive-text {
+    @apply text-base sm:text-base leading-relaxed;
+  }
+
+  .mobile-card-spacing {
+    @apply p-4 sm:p-4 lg:p-6;
+  }
+
+  /* Enhanced interaction states */
+  .interactive-element {
+    @apply transition-all duration-200 hover:scale-105 active:scale-95 focus:scale-105 touch-target;
+  }
+
+  /* Mobile-first grid layouts */
+  .mobile-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-4 lg:gap-6;
+  }
+
+  .mobile-grid-compact {
+    @apply grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-3;
+  }
+
+  /* Enhanced form components - MOBILE OPTIMIZED */
+  .mobile-form-field {
+    @apply space-y-3 sm:space-y-3;
+  }
+
+  .mobile-form-input {
+    @apply h-12 sm:h-12 text-base sm:text-base px-4 py-3 sm:px-4 sm:py-3;
+  }
+
+  /* Micro-interactions */
+  .micro-bounce {
+    @apply transition-transform duration-150 hover:scale-105 active:scale-95 touch-target;
+  }
+
+  .micro-pulse {
+    @apply animate-pulse;
+  }
+
+  .micro-wiggle {
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  /* Loading states */
+  .skeleton-loading {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+
+  /* Enhanced accessibility */
+  .sr-only-focusable:focus {
+    @apply not-sr-only;
+  }
+
+  /* Mobile navigation enhancements - IMPROVED TOUCH TARGETS */
+  .mobile-nav-item {
+    @apply flex flex-col items-center justify-center min-h-[44px] min-w-[44px] px-3 py-2 rounded-xl transition-all duration-200 touch-target;
+  }
+
+  .mobile-nav-active {
+    @apply bg-primary/10 text-primary scale-105;
+  }
+
+  /* Chat interface mobile optimization */
+  .mobile-chat-input {
+    @apply min-h-[44px] text-base px-4 py-3 rounded-lg;
+  }
+
+  .mobile-chat-button {
+    @apply min-h-[44px] min-w-[44px] p-3 rounded-lg touch-target;
+  }
+}
+
+@layer utilities {
+  /* Enhanced color utilities */
+  .text-nutri-green { color: hsl(var(--nutri-green)); }
+  .text-nutri-orange { color: hsl(var(--nutri-orange)); }
+  .text-nutri-blue { color: hsl(var(--nutri-blue)); }
+  .text-nutri-purple { color: hsl(var(--nutri-purple)); }
+  .text-nutri-yellow { color: hsl(var(--nutri-yellow)); }
+  .text-nutri-pink { color: hsl(var(--nutri-pink)); }
+  
+  .bg-nutri-green { background-color: hsl(var(--nutri-green)); }
+  .bg-nutri-orange { background-color: hsl(var(--nutri-orange)); }
+  .bg-nutri-blue { background-color: hsl(var(--nutri-blue)); }
+  .bg-nutri-purple { background-color: hsl(var(--nutri-purple)); }
+  .bg-nutri-yellow { background-color: hsl(var(--nutri-yellow)); }
+  .bg-nutri-pink { background-color: hsl(var(--nutri-pink)); }
+
+  /* Enhanced mobile utilities */
+  .mobile-backdrop-blur {
+    @apply backdrop-blur-sm;
+  }
+
+  .mobile-shadow {
+    @apply shadow-lg sm:shadow-xl;
+  }
+
+  .mobile-rounded {
+    @apply rounded-lg sm:rounded-xl;
+  }
+
+  /* Enhanced touch-friendly animations */
+  .touch-scale {
+    @apply active:scale-95 transition-transform duration-150 ease-out;
+  }
+
+  .touch-highlight {
+    @apply active:bg-gray-100 transition-colors duration-150;
+  }
+
+  /* Prevent text selection on touch interfaces */
+  .touch-callout-none {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Enhanced safe area support */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Mobile-first responsive visibility */
+  .mobile-only {
+    @apply block sm:hidden;
+  }
+
+  .desktop-only {
+    @apply hidden sm:block;
+  }
+
+  /* Enhanced typography utilities - MOBILE READABLE */
+  .text-responsive {
+    @apply text-base sm:text-base lg:text-lg;
+  }
+
+  .text-responsive-small {
+    @apply text-sm sm:text-sm;
+  }
+
+  .text-responsive-large {
+    @apply text-lg sm:text-xl lg:text-2xl;
+  }
+
+  /* Improved spacing utilities */
+  .space-mobile {
+    @apply space-y-4 sm:space-y-4 lg:space-y-6;
+  }
+
+  .gap-mobile {
+    @apply gap-4 sm:gap-4 lg:gap-6;
+  }
+
+  /* Enhanced animation utilities */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.4s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+}
+
+/* Enhanced custom animations */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Enhanced mobile media queries - CRITICAL MOBILE FIXES */
+@media (max-width: 640px) {
+  /* Mobile-specific optimizations */
+  body {
+    font-size: 16px; /* Prevent zoom on iOS - CRITICAL */
+  }
+  
+  /* Improve tap target sizes - CRITICAL */
+  button:not(.btn-sm), 
+  [role="button"],
+  input,
+  select,
+  textarea,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better mobile spacing */
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Ensure form inputs don't trigger zoom */
+  input, 
+  select, 
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small screen optimizations */
+  .mobile-xs-text {
+    font-size: 16px; /* Still prevent zoom */
+    line-height: 1.4;
+  }
+  
+  .mobile-xs-spacing {
+    padding: 16px;
+  }
+}
+
+/* Enhanced accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  /* Enhanced dark mode support */
+  .auto-dark {
+    @apply dark:bg-gray-900 dark:text-white;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .high-contrast {
+    border: 2px solid;
+  }
+}

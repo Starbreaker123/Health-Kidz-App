@@ -1,0 +1,117 @@
+workflows:
+  ios-workflow:
+    name: iOS Build & Publish
+    environment:
+      xcode: latest
+      cocoapods: default
+      groups:
+        - ios-signing  # This references your variable group
+      vars:
+        XCODE_PROJECT: "ios/App/App.xcodeproj"
+        XCODE_SCHEME: "App"
+        BUNDLE_ID: "com.NutriKid.app"
+        APP_NAME: "HealthKidz"
+        CERTIFICATE_URL: $CM_CERTIFICATE_URL
+        CERTIFICATE_PASSWORD: $CM_CERTIFICATE_PASSWORD
+        PROVISIONING_PROFILE_URL: $CM_PROVISIONING_PROFILE_URL
+        KEYCHAIN_PASSWORD: $CM_KEYCHAIN_PASSWORD
+        APP_STORE_CONNECT_ISSUER_ID: $CM_APP_STORE_CONNECT_ISSUER_ID
+        APP_STORE_CONNECT_API_KEY: $CM_APP_STORE_CONNECT_API_KEY
+        APP_STORE_CONNECT_API_KEY_ID: $CM_APP_STORE_CONNECT_API_KEY_ID
+        TEAM_ID: $CM_TEAM_ID
+    scripts:
+      - name: Set up code signing settings
+        script: |
+          #!/usr/bin/env zsh
+          cd ios/App
+          
+          echo "=== CODE SIGNING SETUP ==="
+          echo "Team ID: $TEAM_ID"
+          echo "Bundle ID: $BUNDLE_ID"
+          echo "App Name: $APP_NAME"
+          
+          # Check if variables are set
+          if [ -z "$TEAM_ID" ]; then
+            echo "ERROR: TEAM_ID is not set!"
+            exit 1
+          fi
+          
+          # Update bundle identifier
+          echo "Updating bundle identifier..."
+          /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $BUNDLE_ID" App/Info.plist
+          
+          # Update display name
+          echo "Updating display name..."
+          /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName $APP_NAME" App/Info.plist
+          
+          # Update version and build number
+          echo "Updating version and build number..."
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $CM_BUILD_NUMBER" App/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $CM_BUILD_NUMBER" App/Info.plist
+          
+          # Update team ID in project.pbxproj - using perl for better compatibility
+          echo "Setting development team..."
+          perl -pi -e "s/DEVELOPMENT_TEAM = [^;]*;/DEVELOPMENT_TEAM = $TEAM_ID;/g" App.xcodeproj/project.pbxproj
+          
+          # If no existing DEVELOPMENT_TEAM, add it after buildSettings
+          if ! grep -q "DEVELOPMENT_TEAM" App.xcodeproj/project.pbxproj; then
+            echo "Adding DEVELOPMENT_TEAM to project.pbxproj..."
+            perl -pi -e "s/(buildSettings = \{)/\1\n\t\t\t\t\t\tDEVELOPMENT_TEAM = $TEAM_ID;/g" App.xcodeproj/project.pbxproj
+          fi
+          
+          echo "Code signing settings updated successfully"
+          echo "Team ID set to: $TEAM_ID"
+          
+          # Verify team ID is set correctly
+          echo "Verifying team ID in project.pbxproj..."
+          grep "DEVELOPMENT_TEAM" App.xcodeproj/project.pbxproj || echo "WARNING: DEVELOPMENT_TEAM not found in project.pbxproj"
+          
+          # Show the actual values
+          echo "Current DEVELOPMENT_TEAM values:"
+          grep "DEVELOPMENT_TEAM" App.xcodeproj/project.pbxproj
+      - name: Build web assets
+        script: |
+          #!/usr/bin/env zsh
+          npm ci
+          npm run build
+          npx cap sync ios
+      - name: Build iOS app
+        script: |
+          #!/usr/bin/env zsh
+          cd ios/App
+          
+          # Install pods
+          pod install
+          
+          # Build archive
+          xcodebuild -project App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -archivePath App.xcarchive \
+            -destination generic/platform=iOS \
+            -allowProvisioningUpdates \
+            archive
+          
+          # Export IPA
+          xcodebuild -exportArchive \
+            -archivePath App.xcarchive \
+            -exportPath . \
+            -exportOptionsPlist exportOptions.plist
+    artifacts:
+      - ios/App/App.ipa
+      - ios/App/App.xcarchive
+    publishing:
+      app_store_connect:
+        api_key: $CM_APP_STORE_CONNECT_API_KEY
+        key_id: $CM_APP_STORE_CONNECT_API_KEY_ID
+        issuer_id: $CM_APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
+        submit_to_app_store: false  # Set to true when ready for production
+        beta_groups:
+          - "TestFlight Beta Testers"
+      email:
+        recipients:
+          - your-email@example.com
+        notify:
+          success: true
+          failure: true
