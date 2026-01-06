@@ -423,7 +423,6 @@ A: Fork the repo, make your changes, and submit a pull request. See the Contribu
 
 ## Acknowledgements
 
-- Lovable.dev for AI IDE and preview system
 - [Shadcn/ui](https://ui.shadcn.com/) design system and Radix UI
 - [Supabase](https://supabase.com/) for the backend, Edge Functions, and auth
 - [OpenAI](https://openai.com/) for LLM-powered suggestions
@@ -431,4 +430,4 @@ A: Fork the repo, make your changes, and submit a pull request. See the Contribu
 
 ---
 
-_Last Updated: June 20, 2025_
+_Last Updated: December 3rd, 2025_
