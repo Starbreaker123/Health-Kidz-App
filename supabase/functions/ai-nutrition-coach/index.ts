@@ -6,10 +6,24 @@ const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-const allowedOrigin = Deno.env.get('ALLOWED_ORIGIN') || 'https://nutri-kid.vercel.app';
-const corsHeaders = {
-  'Access-Control-Allow-Origin': allowedOrigin,
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+// Allowed origins - can be set via environment variable or defaults
+const allowedOrigins = Deno.env.get('ALLOWED_ORIGINS')?.split(',') || [
+  'https://healthkidz.vercel.app',
+  'https://nutri-kid.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:8080'
+];
+
+// Function to get CORS headers based on request origin
+const getCorsHeaders = (origin: string | null) => {
+  const requestOrigin = origin || '';
+  const allowedOrigin = allowedOrigins.includes(requestOrigin) ? requestOrigin : allowedOrigins[0];
+  
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  };
 };
 
 // Rate limiting configuration
@@ -131,6 +145,9 @@ Please try again in a few minutes, or check the Education section for detailed n
 };
 
 serve(async (req) => {
+  const origin = req.headers.get('origin');
+  const corsHeaders = getCorsHeaders(origin);
+  
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
