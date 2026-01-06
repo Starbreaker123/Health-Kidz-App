@@ -189,81 +189,111 @@ serve(async (req) => {
     const systemPrompt = generateSystemPrompt(childData, nutritionHistory);
     const fullPrompt = `${systemPrompt}\n\nUser Question: ${message}`;
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: fullPrompt
-          }]
-        }],
-        generationConfig: {
-          temperature: 0.7,
-          topK: 40,
-          topP: 0.95,
-          maxOutputTokens: 800, // Reduced from 1000 for cost control
+    // Add timeout to prevent function from hanging
+    const timeoutMs = 25000; // 25 seconds (Supabase functions have ~30s timeout)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        safetySettings: [
-          {
-            category: "HARM_CATEGORY_HARASSMENT",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+        signal: controller.signal,
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: fullPrompt
+            }]
+          }],
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 800, // Reduced from 1000 for cost control
           },
-          {
-            category: "HARM_CATEGORY_HATE_SPEECH",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE"
-          },
-          {
-            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE"
-          },
-          {
-            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-            threshold: "BLOCK_LOW_AND_ABOVE" // More strict for child nutrition
-          }
-        ]
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error('Gemini API Error:', {
-        status: response.status,
-        statusText: response.statusText,
-        error: errorData
+          safetySettings: [
+            {
+              category: "HARM_CATEGORY_HARASSMENT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE"
+            },
+            {
+              category: "HARM_CATEGORY_HATE_SPEECH",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE"
+            },
+            {
+              category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE"
+            },
+            {
+              category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+              threshold: "BLOCK_LOW_AND_ABOVE" // More strict for child nutrition
+            }
+          ]
+        }),
       });
-      throw new Error(`Gemini API error: ${response.status} - ${errorData}`);
-    }
 
-    const data = await response.json();
-    const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      clearTimeout(timeoutId);
 
-    if (!aiResponse) {
-      throw new Error('No response generated from Gemini');
-    }
-
-    // Sanitize the AI response
-    const sanitizedResponse = sanitizeResponse(aiResponse);
-
-    console.log('AI response generated and sanitized successfully');
-
-    return new Response(
-      JSON.stringify({ 
-        response: sanitizedResponse,
-        usage: data.usageMetadata 
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Gemini API Error:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorData
+        });
+        throw new Error(`Gemini API error: ${response.status} - ${errorData}`);
       }
-    );
+
+      const data = await response.json();
+      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (!aiResponse) {
+        throw new Error('No response generated from Gemini');
+      }
+
+      // Sanitize the AI response
+      const sanitizedResponse = sanitizeResponse(aiResponse);
+
+      console.log('AI response generated and sanitized successfully');
+
+      return new Response(
+        JSON.stringify({ 
+          response: sanitizedResponse,
+          usage: data.usageMetadata 
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      
+      // Handle timeout specifically
+      if (fetchError.name === 'AbortError' || fetchError.message?.includes('aborted')) {
+        console.error('Request timeout - Gemini API took too long to respond');
+        throw new Error('Request timeout - The AI service is taking too long to respond. Please try again.');
+      }
+      
+      // Re-throw other errors to be caught by outer catch
+      throw fetchError;
+    }
 
   } catch (error) {
     console.error('Error in ai-nutrition-coach function:', error);
+    
+    // Provide more specific error messages
+    let errorMessage = 'AI service temporarily unavailable';
+    if (error.message?.includes('timeout')) {
+      errorMessage = 'The AI service is taking too long to respond. Please try again.';
+    } else if (error.message?.includes('404')) {
+      errorMessage = 'AI model not found. Please check configuration.';
+    }
+    
     return new Response(
       JSON.stringify({ 
-        error: 'AI service temporarily unavailable',
+        error: errorMessage,
         response: getFallbackResponse()
       }),
       {
