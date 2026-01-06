@@ -189,7 +189,7 @@ serve(async (req) => {
     const systemPrompt = generateSystemPrompt(childData, nutritionHistory);
     const fullPrompt = `${systemPrompt}\n\nUser Question: ${message}`;
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -229,8 +229,12 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('Gemini API Error:', errorData);
-      throw new Error(`Gemini API error: ${response.status}`);
+      console.error('Gemini API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorData
+      });
+      throw new Error(`Gemini API error: ${response.status} - ${errorData}`);
     }
 
     const data = await response.json();
